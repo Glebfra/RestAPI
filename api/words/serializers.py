@@ -23,3 +23,5 @@ class WordSerializer(BaseSerializer):
     def update(self, instance, validated_data):
         instance.russian = validated_data.get('russian', instance.russian)
         instance.japanese = validated_data.get('japanese', instance.japanese)
+        instance.save()
+        return instance
