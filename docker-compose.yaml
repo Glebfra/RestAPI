@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql
+    restart: always
+    volumes:
+      - ./.data/mysql:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-u', 'root']
+      interval: 1s
+      timeout: 3s
+      retries: 3
+    env_file:
+      - .env
+    ports:
+      - '3306:3306'
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8080:80"
+
+  django:
+    container_name: django
+    build: ./api
+    volumes:
+      - ./api:/var/lib/django/api
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
