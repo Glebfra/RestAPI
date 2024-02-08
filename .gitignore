@@ -1,6 +1,12 @@
 .env
-*.sqllite*
+*.sqlite*
 
 .idea
 venv
 .data
+
+api/*/migrations/*
+!api/*/migrations/__init__.py
+
+api/static
+api/media
