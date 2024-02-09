@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -78,17 +79,11 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DJANGO_DATABASE'),
-        'USER': os.getenv('DJANGO_DATABASE_USER'),
-        'PASSWORD': os.getenv('DJANGO_DATABASE_PASSWORD'),
-        'HOST': os.getenv('DJANGO_DATABASE_HOST'),
-        'PORT': os.getenv('DJANGO_DATABASE_PORT'),
-    },
-    'OPTIONS': {
-        "init_command": "SET foreign_key_checks = 0;",
-    },
+    'default': dj_database_url.config(
+        default=os.getenv('DJANGO_DATABASE'),
+        conn_max_age=600,
+        conn_health_checks=True
+    )
 }
 
 
