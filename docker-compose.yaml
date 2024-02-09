@@ -23,8 +23,8 @@ services:
     restart: always
     env_file:
       - .env
-    ports:
-      - "8080:80"
+    expose:
+      - 8080
 
   django:
     container_name: django
@@ -49,10 +49,14 @@ services:
         DJANGO_SERVER_NAME: ${DJANGO_SERVER_NAME}
         REACT_SERVER_PORT: ${REACT_SERVER_PORT}
         DJANGO_SERVER_PORT: ${DJANGO_SERVER_PORT}
+        PHPMYADMIN_SERVER_NAME: ${PHPMYADMIN_SERVER_NAME}
+        PHPMYADMIN_SERVER_PORT: ${PHPMYADMIN_SERVER_PORT}
     volumes:
       - ./api/static:/var/lib/nginx/static
+      - ./front/build:/var/lib/nginx/react
     depends_on:
       - django
     ports:
       - "80:80"
       - "8000:8000"
+      - "8080:8080"
