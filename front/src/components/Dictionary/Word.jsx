@@ -3,39 +3,45 @@ import axios from "axios";
 import {Container, Table} from "react-bootstrap";
 
 function Word() {
-    const [resp, setResp] = useState([]);
+    const [words, setWords] = useState([]);
 
     useEffect(() => {
         axios.get("http://localhost:8000/dictionary/words/?format=json")
             .then(response => {
-                setResp(response.data);
+                setWords(response.data);
             })
-    }, [setResp]);
+    }, [setWords]);
 
-    const tableHead = (
-        <tr>
-            <th>#</th>
-            <th>Russian</th>
-            <th>Japanese</th>
-        </tr>
-    );
+    const tableBody = (item) => {
+        const color = item.count < 5 ? "#b72000" : "#007b28";
 
-    const tableBody = (item) => (
-        <tr>
-            <td>{item.id}</td>
-            <td>{item.russian}</td>
-            <td><font face="Hina Mincho">{item.japanese}</font></td>
-        </tr>
-    );
+        return (
+            <tr>
+                <td><font face="Arial" color={color} size={5}>{item.id}</font></td>
+                <td><font face="Arial" color={color} size={5}>{item.russian}</font></td>
+                <td><font face="Hina Mincho" color={color} size={5}>{item.japanese}</font></td>
+            </tr>
+        );
+    };
 
     return (
         <Container>
             <Table striped bordered hover size="sm">
                 <thead>
-                {tableHead}
+                <tr>
+                    <th>
+                        <td><font face="Arial" size={5}>#</font></td>
+                    </th>
+                    <th>
+                        <td><font face="Arial" size={5}>Russian</font></td>
+                    </th>
+                    <th>
+                        <td><font face="Arial" size={5}>Japanese</font></td>
+                    </th>
+                </tr>
                 </thead>
                 <tbody>
-                {resp.map(item => tableBody(item))}
+                {words.map(item => tableBody(item))}
                 </tbody>
             </Table>
         </Container>
