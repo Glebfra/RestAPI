@@ -61,7 +61,7 @@ DATABASES = {
         default=os.getenv('DJANGO_DATABASE'),
         conn_max_age=600,
         conn_health_checks=True
-    )
+    ),
 }
 
 
@@ -80,19 +80,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost',
-    'http://localhost:8000',
-    'http://django:8000',
-    'http://localhost:3000'
-]
+TRUSTED_ORIGINS = str(os.getenv('DJANGO_TRUSTED_ORIGINS')).split(',')
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost',
-    'http://localhost:8000',
-    'http://django:8000',
-    'http://localhost:3000'
-]
+CORS_ALLOWED_ORIGINS = TRUSTED_ORIGINS
+
+CSRF_TRUSTED_ORIGINS = TRUSTED_ORIGINS
 
 
 LANGUAGE_CODE = 'en-us'

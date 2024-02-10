@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {Container, Table} from "react-bootstrap";
+import Menu from "../Menu/Menu";
 
-function Word() {
+function Words() {
     const [words, setWords] = useState([]);
 
     useEffect(() => {
@@ -12,12 +13,12 @@ function Word() {
             })
     }, [setWords]);
 
-    const tableBody = (item) => {
+    const tableBody = (item, index) => {
         const color = item.count < 5 ? "#b72000" : "#007b28";
 
         return (
             <tr>
-                <td><font face="Arial" color={color} size={5}>{item.id}</font></td>
+                <td><font face="Arial" color={color} size={5}>{index + 1}</font></td>
                 <td><font face="Arial" color={color} size={5}>{item.russian}</font></td>
                 <td><font face="Hina Mincho" color={color} size={5}>{item.japanese}</font></td>
             </tr>
@@ -26,6 +27,9 @@ function Word() {
 
     return (
         <Container>
+            <header>
+                <Menu/>
+            </header>
             <Table striped bordered hover size="sm">
                 <thead>
                 <tr>
@@ -41,11 +45,11 @@ function Word() {
                 </tr>
                 </thead>
                 <tbody>
-                {words.map(item => tableBody(item))}
+                {words.map((item, index) => tableBody(item, index))}
                 </tbody>
             </Table>
         </Container>
     );
 }
 
-export default Word;
+export default Words;
