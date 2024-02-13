@@ -14,6 +14,18 @@ class BaseSerializer(serializers.ModelSerializer):
         return model
 
 
+class LanguageSerializer(BaseSerializer):
+    class Meta:
+        model = Language
+        fields = '__all__'
+        read_only_fields = ['id']
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+
+
 class WordSerializer(BaseSerializer):
     class Meta:
         model = Words

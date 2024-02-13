@@ -28,7 +28,7 @@ function Menu() {
             <Navbar.Collapse>
                 <Nav className="me-auto align-items-center">
                     <img alt="book_icon" src={book_icon} height={24} width={24} className="ms-4"/>
-                    <Nav.Link href="/words">Words</Nav.Link>
+                    <Nav.Link href="/dictionary">Dictionary</Nav.Link>
                     <img alt="account_icon" src={account_avatar} height={24} width={24} className="ms-2"/>
                     <Nav.Link href="/login">Account</Nav.Link>
                 </Nav>

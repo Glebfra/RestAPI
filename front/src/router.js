@@ -1,7 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
 import Words from "./components/Dictionary/Words";
 import React from "react";
-import Menu from "./components/Menu/Menu";
+import Dictionary from "./components/Dictionary/Dictionary";
 
 const router = createBrowserRouter([
     {
@@ -9,8 +9,12 @@ const router = createBrowserRouter([
         element: <div>Hello world</div>
     },
     {
-        path: "words/",
+        path: "dictionary/words/",
         element: <Words/>
+    },
+    {
+        path: "dictionary/",
+        element: <Dictionary/>
     },
 ]);
 
