@@ -3,10 +3,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dictionary/', include('dictionary.urls')),
-    path('science/', include('science.urls'))
+    path('science/', include('science.urls')),
+    path('auth/', include('authentication.urls'))
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
