@@ -4,7 +4,7 @@ import Menu from "../Menu/Menu";
 
 
 function Dictionary() {
-    const words = ['a', 'i', 'u', 'e', 'o'];
+    const words = ['a', 'i', 'u', 'e', 'o']
     const wordsBody = [
         ['あ', 'い', 'う', 'え', 'お'],
         ['か', 'き', 'く', 'け', 'こ'],
@@ -14,7 +14,7 @@ function Dictionary() {
         ['は', 'ひ', 'ふ', 'へ', 'ほ'],
         ['ま', 'み', 'む', 'め', 'も'],
         ['や', '', 'ゆ', '', 'よ'],
-    ];
+    ]
 
     return (
         <Container>

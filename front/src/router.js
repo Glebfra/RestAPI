@@ -1,7 +1,8 @@
-import {createBrowserRouter} from "react-router-dom";
-import Words from "./components/Dictionary/Words";
-import React from "react";
-import Dictionary from "./components/Dictionary/Dictionary";
+import {createBrowserRouter} from "react-router-dom"
+import Words from "./components/Dictionary/Words"
+import React from "react"
+import Dictionary from "./components/Dictionary/Dictionary"
+import Science from "./components/Science/Science"
 
 const router = createBrowserRouter([
     {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
         path: "dictionary/",
         element: <Dictionary/>
     },
-]);
+    {
+        path: "science/",
+        element: <Science/>
+    },
+])
 
-export default router;
+export default router

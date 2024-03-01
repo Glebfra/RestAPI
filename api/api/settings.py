@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'dictionary.apps.DictionaryConfig',
+    'science.apps.ScienceConfig',
 ]
 
 MIDDLEWARE = [

@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from "react";
-import axios from "axios";
-import {Container, Table} from "react-bootstrap";
-import Menu from "../Menu/Menu";
+import React, {useEffect, useState} from "react"
+import axios from "axios"
+import {Container, Table} from "react-bootstrap"
+import Menu from "../Menu/Menu"
 
 function Words() {
-    const [words, setWords] = useState([]);
+    const [words, setWords] = useState([])
 
     useEffect(() => {
         axios.get("http://localhost:8000/dictionary/words/?format=json")
             .then(response => {
-                setWords(response.data);
+                setWords(response.data)
             })
-    }, [setWords]);
+    }, [setWords])
 
     const tableBody = (item, index) => {
-        const color = item.count < 5 ? "#b72000" : "#007b28";
+        const color = item.count < 5 ? "#b72000" : "#007b28"
 
         return (
             <tr>
@@ -22,8 +22,8 @@ function Words() {
                 <td><font face="Arial" color={color} size={5}>{item.russian}</font></td>
                 <td><font face="Hina Mincho" color={color} size={5}>{item.japanese}</font></td>
             </tr>
-        );
-    };
+        )
+    }
 
     return (
         <Container>
@@ -49,7 +49,7 @@ function Words() {
                 </tbody>
             </Table>
         </Container>
-    );
+    )
 }
 
-export default Words;
+export default Words
