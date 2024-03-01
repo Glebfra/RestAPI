@@ -31,7 +31,7 @@ function Menu() {
                     <img alt="book_icon" src={science_icon} height={24} width={24} className="ms-2"/>
                     <Nav.Link href="/science">Science</Nav.Link>
                     <img alt="account_icon" src={account_avatar} height={24} width={24} className="ms-2"/>
-                    <Nav.Link href="/login">Account</Nav.Link>
+                    <Nav.Link href="/account">Account</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
             <Navbar.Collapse className="justify-content-end">
