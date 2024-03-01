@@ -8,5 +8,8 @@ venv
 api/*/migrations/*
 !api/*/migrations/__init__.py
 
+*/tests
+*Test*.py
+
 api/static
 api/media
