@@ -8,81 +8,59 @@ from .models import Element, Phase, Saturation, State
 from .serializers import ElementSerializer, PhaseSerializer, SaturationSerializer, StateSerializer
 
 
-class APIElementsViewSet(ModelViewSet):
+class APIVerifiedViewSet(ModelViewSet):
+    authentication_classes = (JWTAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = self.queryset.filter(user=user)
+        return queryset
+
+
+class APIElementsViewSet(APIVerifiedViewSet):
     queryset = Element.objects.all()
     serializer_class = ElementSerializer
-    authentication_classes = (JWTAuthentication, )
-    permission_classes = (IsAuthenticated, )
-
-    def get_queryset(self):
-        user = self.request.user
-        queryset = self.queryset.filter(user=user)
-        return queryset
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid() and request.user.is_authenticated:
-            serializer.user = request.user
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
-class APIStatesViewSet(ModelViewSet):
+class APIStatesViewSet(APIVerifiedViewSet):
     queryset = State.objects.all()
     serializer_class = StateSerializer
-    authentication_classes = (JWTAuthentication, )
-    permission_classes = (IsAuthenticated, )
-
-    def get_queryset(self):
-        user = self.request.user
-        queryset = self.queryset.filter(user=user)
-        return queryset
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid() and request.user.is_authenticated:
-            serializer.user = request.user.pk
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
-class APIPhasesViewSet(ModelViewSet):
+class APIPhasesViewSet(APIVerifiedViewSet):
     queryset = Phase.objects.all()
     serializer_class = PhaseSerializer
-    authentication_classes = (JWTAuthentication, )
-    permission_classes = (IsAuthenticated, )
-
-    def get_queryset(self):
-        user = self.request.user
-        queryset = self.queryset.filter(user=user)
-        return queryset
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid() and request.user.is_authenticated:
-            serializer.user = request.user.pk
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
-class APISaturationsViewSet(ModelViewSet):
+class APISaturationsViewSet(APIVerifiedViewSet):
     queryset = Saturation.objects.all()
     serializer_class = SaturationSerializer
-    authentication_classes = (JWTAuthentication, )
-    permission_classes = (IsAuthenticated, )
-
-    def get_queryset(self):
-        user = self.request.user
-        queryset = self.queryset.filter(user=user)
-        return queryset
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid() and request.user.is_authenticated:
-            serializer.user = request.user.pk
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
