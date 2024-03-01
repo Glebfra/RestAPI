@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.viewsets import ModelViewSet
@@ -9,13 +9,12 @@ from .serializers import ElementSerializer, PhaseSerializer, SaturationSerialize
 
 
 class APIVerifiedViewSet(ModelViewSet):
-    authentication_classes = (JWTAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JWTAuthentication,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    def get_queryset(self):
-        user = self.request.user
-        queryset = self.queryset.filter(user=user)
-        return queryset
+    @property
+    def user(self):
+        return self.request.user
 
 
 class APIElementsViewSet(APIVerifiedViewSet):
