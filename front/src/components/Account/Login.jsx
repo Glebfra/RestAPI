@@ -13,7 +13,7 @@ function Login() {
 
     const login = (props) => {
         console.log(props)
-        axios.post('http://api.localhost/auth/token/', {
+        axios.post('/auth/token/', {
             email: email,
             password: password
         }).then(response => {
