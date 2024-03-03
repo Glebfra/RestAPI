@@ -3,25 +3,22 @@ import axios from "axios";
 import {Button, Card, Col, Container, Form, Image, Row} from "react-bootstrap";
 import Menu from "../Menu/Menu";
 import {Navigate} from "react-router-dom";
-import account_avatar from "../../assets/account_avatar.svg"
 
 function Account() {
     const [account, setAccount] = useState({})
     const [isLogged, setIsLogged] = useState(true)
-    const [username, setUsername] = useState(account.username)
-    const [email, setEmail] = useState(account.email)
-    const [firstName, setFirstName] = useState(account.first_name)
-    const [lastName, setLastName] = useState(account.last_name)
+    const [data, setData] = useState(account)
+
+    const handleChange = ({currentTarget: input}) => {
+        let newData = {...data}
+        newData[input.name] = input.value
+        setData(newData)
+    }
 
     const onSaveAccount = () => {
         axios.patch(
             `/auth/account/`,
-            {
-                username: username,
-                email: email,
-                first_name: firstName,
-                last_name: lastName
-            }
+            data
         ).then(response => {
             console.log(response)
         }).catch(error => {
@@ -55,7 +52,8 @@ function Account() {
                     <Card.Body>
                         <Row>
                             <Col>
-                                <Image className='mx-2' roundedCircle src={axios.defaults.baseURL + account.avatar} alt='Account' height={96}
+                                <Image className='mx-2' roundedCircle src={axios.defaults.baseURL + account.avatar}
+                                       alt='Account' height={96}
                                        width={96}/>
                                 <Button variant='outline-primary' className='me-3'>Change</Button>
                                 <Button variant='outline-secondary' className='me-3'>Remove</Button>
@@ -66,15 +64,15 @@ function Account() {
                             <Col>
                                 <Form.Group className='mx-2'>
                                     <Form.Label><b>Username</b></Form.Label>
-                                    <Form.Control type='text' defaultValue={account.username}
-                                                  onChange={e => setUsername(e.target.value)}/>
+                                    <Form.Control type='text' defaultValue={account.username} name='username'
+                                                  onChange={e => handleChange(e)}/>
                                 </Form.Group>
                             </Col>
                             <Col>
                                 <Form.Group className='mx-2'>
                                     <Form.Label><b>Email</b></Form.Label>
-                                    <Form.Control type='email' defaultValue={account.email}
-                                                  onChange={e => setEmail(e.target.value)}/>
+                                    <Form.Control type='email' defaultValue={account.email} name='email'
+                                                  onChange={e => handleChange(e)}/>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -83,15 +81,15 @@ function Account() {
                             <Col>
                                 <Form.Group className='mx-2'>
                                     <Form.Label><b>First Name</b></Form.Label>
-                                    <Form.Control type='text' defaultValue={account.first_name}
-                                                  onChange={e => setFirstName(e.target.value)}/>
+                                    <Form.Control type='text' defaultValue={account.first_name} name='first_name'
+                                                  onChange={e => handleChange(e)}/>
                                 </Form.Group>
                             </Col>
                             <Col>
                                 <Form.Group className='mx-2'>
                                     <Form.Label><b>Last Name</b></Form.Label>
-                                    <Form.Control type='text' defaultValue={account.last_name}
-                                                  onChange={e => setLastName(e.target.value)}/>
+                                    <Form.Control type='text' defaultValue={account.last_name} name='last_name'
+                                                  onChange={e => handleChange(e)}/>
                                 </Form.Group>
                             </Col>
                         </Row>
