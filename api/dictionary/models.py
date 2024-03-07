@@ -28,5 +28,4 @@ class Words(models.Model):
         verbose_name_plural = 'Слова'
 
     def __str__(self):
-        self.translations
         return self.word
