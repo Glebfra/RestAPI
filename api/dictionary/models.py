@@ -6,7 +6,7 @@ User = settings.AUTH_USER_MODEL
 
 
 class Language(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     class Meta:
         verbose_name = 'Язык'
@@ -17,7 +17,7 @@ class Language(models.Model):
 
 
 class Words(models.Model):
-    word = models.CharField(max_length=255, verbose_name='Слово', null=True)
+    word = models.CharField(max_length=255, verbose_name='Слово', null=True, unique=True)
     translations = models.ManyToManyField('self', verbose_name='Перевод', symmetrical=True, blank=True)
     language = models.ForeignKey(Language, on_delete=models.CASCADE, verbose_name='Язык', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
