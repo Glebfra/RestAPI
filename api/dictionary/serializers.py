@@ -1,12 +1,13 @@
 from rest_framework import serializers
+
 from .models import *
 
 
-class BaseSerializer(serializers.ModelSerializer):
+class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = None
+        model = Language
         fields = '__all__'
-        read_only_fields = []
+        read_only_fields = ['id']
 
     def create(self, validated_data):
         model = self.Meta.model(**validated_data)
@@ -14,26 +15,26 @@ class BaseSerializer(serializers.ModelSerializer):
         return model
 
 
-class LanguageSerializer(BaseSerializer):
-    class Meta:
-        model = Language
-        fields = '__all__'
-        read_only_fields = ['id']
-
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.save()
-        return instance
-
-
-class WordSerializer(BaseSerializer):
+class TranslationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Words
-        fields = '__all__'
-        read_only_fields = ['id', 'created_at', 'count']
+        fields = ['id', 'word', 'language']
+        read_only_fields = ['word', 'language']
+
+
+class WordSerializer(serializers.ModelSerializer):
+    translations_details = TranslationSerializer(many=True, read_only=True, source='translations')
+
+    class Meta:
+        model = Words
+        fields = ['id', 'word', 'language', 'translations', 'translations_details']
+        read_only_fields = ['id']
+
+    def create(self, validated_data):
+        model = self.Meta.model(**validated_data)
+        model.save()
+        return model
 
     def update(self, instance, validated_data):
-        instance.russian = validated_data.get('russian', instance.russian)
-        instance.japanese = validated_data.get('japanese', instance.japanese)
-        instance.save()
+        instance = super(WordSerializer, self).update(instance, validated_data)
         return instance
