@@ -3,11 +3,15 @@ import Words from "./components/Dictionary/Words"
 import React from "react"
 import Dictionary from "./components/Dictionary/Dictionary"
 import Science from "./components/Science/Science"
+import Main from "./components/Index";
+import Account from "./components/Account/Account";
+import Login from "./components/Account/Login";
+import Register from "./components/Account/Register";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <div>Hello world</div>
+        element: <Main/>
     },
     {
         path: "dictionary/words/",
@@ -20,6 +24,18 @@ const router = createBrowserRouter([
     {
         path: "science/",
         element: <Science/>
+    },
+    {
+        path: "account/",
+        element: <Account/>
+    },
+    {
+        path: "login/",
+        element: <Login/>
+    },
+    {
+        path: "register/",
+        element: <Register/>
     },
 ])
 
