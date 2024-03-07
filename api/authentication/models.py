@@ -26,7 +26,7 @@ class User(AbstractUser, PermissionsMixin):
     avatar = models.FileField(upload_to='users/avatars/', default='users/avatars/default.svg')
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username', 'password']
 
     objects = UserManager()
 
