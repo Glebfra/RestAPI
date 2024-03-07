@@ -53,8 +53,7 @@ function Account() {
                         <Row>
                             <Col>
                                 <Image className='mx-2' roundedCircle src={axios.defaults.baseURL + account.avatar}
-                                       alt='Account' height={96}
-                                       width={96}/>
+                                       alt='Account' height={96} width={96}/>
                                 <Button variant='outline-primary' className='me-3'>Change</Button>
                                 <Button variant='outline-secondary' className='me-3'>Remove</Button>
                             </Col>
