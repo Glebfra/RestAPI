@@ -7,16 +7,21 @@ import {Navigate} from "react-router-dom";
 
 function Login() {
     const [isLogged, setIsLogged] = useState(false)
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [data, setData] = useState({})
     const [isError, setIsError] = useState(false)
+
+    const handleChange = ({currentTarget: input}) => {
+        let newData = {...data}
+        newData[input.name] = input.value
+        setData(newData)
+    }
 
     const login = (props) => {
         console.log(props)
-        axios.post('http://api.localhost/auth/token/', {
-            email: email,
-            password: password
-        }).then(response => {
+        axios.post(
+            '/auth/token/',
+            data
+        ).then(response => {
             localStorage.setItem('access', response.data.access)
             localStorage.setItem('refresh', response.data.refresh)
             setIsLogged(true)
@@ -46,7 +51,8 @@ function Login() {
                             >
                                 <Form.Control
                                     type="email"
-                                    onChange={e => setEmail(e.target.value)}
+                                    onChange={e => handleChange(e)}
+                                    name='email'
                                     placeholder="name@example.com"
                                 />
                             </FloatingLabel>
@@ -57,7 +63,8 @@ function Login() {
                             >
                                 <Form.Control
                                     type="password"
-                                    onChange={e => setPassword(e.target.value)}
+                                    onChange={e => handleChange(e)}
+                                    name='password'
                                     placeholder="Password"
                                 />
                             </FloatingLabel>

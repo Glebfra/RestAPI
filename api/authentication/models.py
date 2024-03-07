@@ -23,6 +23,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser, PermissionsMixin):
     email = models.EmailField(unique=True)
+    avatar = models.FileField(upload_to='users/avatars/', default='users/avatars/default.svg')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

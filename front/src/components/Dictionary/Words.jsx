@@ -7,7 +7,7 @@ function Words() {
     const [words, setWords] = useState([])
 
     useEffect(() => {
-        axios.get("http://localhost:8000/dictionary/words/?format=json")
+        axios.get("/dictionary/words/?format=json")
             .then(response => {
                 setWords(response.data)
             })
