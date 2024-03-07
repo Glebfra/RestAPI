@@ -6,6 +6,7 @@ import Science from "./components/Science/Science"
 import Main from "./components/Index";
 import Account from "./components/Account/Account";
 import Login from "./components/Account/Login";
+import Register from "./components/Account/Register";
 
 const router = createBrowserRouter([
     {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
     {
         path: "login/",
         element: <Login/>
+    },
+    {
+        path: "register/",
+        element: <Register/>
     },
 ])
 
