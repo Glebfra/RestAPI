@@ -21,7 +21,7 @@ class Words(models.Model):
     translations = models.ManyToManyField('self', verbose_name='Перевод', symmetrical=True, blank=True)
     language = models.ForeignKey(Language, on_delete=models.CASCADE, verbose_name='Язык', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    users = models.ManyToManyField(User, verbose_name='Слова пользователей', symmetrical=True, null=True, blank=True)
+    users = models.ManyToManyField(User, verbose_name='Слова пользователей', related_name='words', symmetrical=True, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Слово'
