@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from "react"
-import axios from "axios"
-import {Button, Card, Container} from "react-bootstrap"
-import Menu from "../Menu/Menu"
+import React, {useEffect, useState} from "react";
+import axios from "axios";
+import {Button, Card, Container} from "react-bootstrap";
+import Menu from "../Menu/Menu";
 
-// TODO Create the word page with translations
-function Words() {
+function AccountWords() {
     const [languages, setLanguages] = useState([])
     const [data, setData] = useState({
         count: 0,
@@ -12,7 +11,7 @@ function Words() {
     })
     const [page, setPage] = useState(1)
 
-    const getData = (url = 'dictionary/words/') => {
+    const getData = (url = 'dictionary/account/words/') => {
         axios.get(
             url
         ).then(response => {
@@ -73,4 +72,4 @@ function Words() {
     )
 }
 
-export default Words
+export default AccountWords

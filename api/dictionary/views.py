@@ -1,25 +1,48 @@
-from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Language, Words
 from .serializers import LanguageSerializer, WordSerializer
 
 
-class BaseAPIViewSet(ModelViewSet):
-    def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=HTTP_201_CREATED)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+class APIWordsViewSet(APIView):
+    pagination_class = LimitOffsetPagination
+
+    def get(self, request):
+        queryset = Words.objects.all()
+        pagination = self.pagination_class()
+        paginated_queryset = pagination.paginate_queryset(queryset, request, view=self)
+        serializer = WordSerializer(paginated_queryset, many=True)
+        return pagination.get_paginated_response(serializer.data)
 
 
-class APIWordsViewSet(BaseAPIViewSet):
-    queryset = Words.objects.all()
-    serializer_class = WordSerializer
+class APILanguagesViewSet(APIView):
+    pagination_class = LimitOffsetPagination
+
+    def get(self, request):
+        queryset = Language.objects.all()
+        pagination = self.pagination_class()
+        paginated_queryset = pagination.paginate_queryset(queryset, request, view=self)
+        serializer = LanguageSerializer(paginated_queryset, many=True)
+        return pagination.get_paginated_response(serializer.data)
 
 
-class APILanguagesViewSet(BaseAPIViewSet):
-    queryset = Language.objects.all()
-    serializer_class = LanguageSerializer
+class APIUserWordsViewSet(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
+    pagination_class = LimitOffsetPagination
+
+    def get(self, request):
+        queryset = request.user.words.all()
+        query_params = self.request.query_params
+        if (language := query_params.get('language')) is not None:
+            queryset = queryset.filter(language__id=language)
+        if (word := query_params.get('word')) is not None:
+            queryset = queryset.filter(word__contains=word)
+
+        pagination = self.pagination_class()
+        paginated_queryset = pagination.paginate_queryset(queryset, request, view=self)
+        serializer = WordSerializer(paginated_queryset, many=True)
+        return pagination.get_paginated_response(serializer.data)

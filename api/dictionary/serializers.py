@@ -31,6 +31,7 @@ class WordSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
     def create(self, validated_data):
+        validated_data.pop('translations')
         model = self.Meta.model(**validated_data)
         model.save()
         return model

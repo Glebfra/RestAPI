@@ -1,11 +1,12 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import APIWordsViewSet
+from .views import APILanguagesViewSet, APIUserWordsViewSet, APIWordsViewSet
 
-router = DefaultRouter()
-router.register('words', APIWordsViewSet)
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('words/', APIWordsViewSet.as_view()),
+    path('account/words/', APIUserWordsViewSet.as_view()),
+
+    path('languages/', APILanguagesViewSet.as_view()),
 ]

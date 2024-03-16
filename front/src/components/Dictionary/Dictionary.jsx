@@ -2,7 +2,7 @@ import React from "react";
 import {Card, Container, Table} from "react-bootstrap";
 import Menu from "../Menu/Menu";
 
-
+// TODO Create the dictionary page with possibility to add new word to user account
 function Dictionary() {
     const words = ['a', 'i', 'u', 'e', 'o']
     const wordsBody = [
