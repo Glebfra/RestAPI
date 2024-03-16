@@ -1,0 +1,43 @@
+.words-flex-container {
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.words-flex-element {
+    display: flex;
+}
+
+.words-menu {
+    flex-direction: column;
+    margin-right: 5vh;
+}
+
+.words-menu-item {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 150%;
+    width: 20vh;
+}
+
+.words-menu-item:hover {
+    background: var(--secondary-color);
+}
+
+.words-main {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.words-main-item {
+    text-align: center;
+    width: 20vh;
+    margin: 1vh;
+    justify-content: center;
+    padding: 5vh 1vh;
+}
+
+.words-main-item:hover {
+    background: var(--secondary-color);
+}
