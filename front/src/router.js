@@ -7,11 +7,16 @@ import Main from "./components/Index";
 import Account from "./components/Account/Account";
 import Login from "./components/Account/Login";
 import Register from "./components/Account/Register";
+import AccountWords from "./components/Dictionary/AccountWords";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Main/>
+    },
+    {
+        path: "dictionary/account/words/",
+        element: <AccountWords/>
     },
     {
         path: "dictionary/words/",
@@ -36,7 +41,7 @@ const router = createBrowserRouter([
     {
         path: "register/",
         element: <Register/>
-    },
+    }
 ])
 
 export default router
