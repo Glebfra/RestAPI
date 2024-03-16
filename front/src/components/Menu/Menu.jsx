@@ -21,7 +21,7 @@ const MenuSearch = (
 
 function Menu() {
     return (
-        <Navbar expand="lg" className="bg-body-tertiary py-3 mb-5" sticky="top">
+        <Navbar expand="lg" className="bg-body-tertiary py-3" sticky="top">
             <Navbar.Brand href="/">Rest API</Navbar.Brand>
             <div className='vr'/>
             <Navbar.Collapse>
