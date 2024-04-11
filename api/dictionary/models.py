@@ -1,8 +1,4 @@
 from django.db import models
-from django.conf import settings
-
-
-User = settings.AUTH_USER_MODEL
 
 
 class Language(models.Model):
@@ -17,11 +13,13 @@ class Language(models.Model):
 
 
 class Words(models.Model):
-    word = models.CharField(max_length=255, verbose_name='Слово', null=True, unique=True)
-    translations = models.ManyToManyField('self', verbose_name='Перевод', symmetrical=True, blank=True)
-    language = models.ForeignKey(Language, on_delete=models.CASCADE, verbose_name='Язык', null=True)
+    word = models.CharField(max_length=255, verbose_name='Слово', unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    users = models.ManyToManyField(User, verbose_name='Слова пользователей', related_name='words', symmetrical=True, null=True, blank=True)
+
+    language = models.ForeignKey(Language, on_delete=models.CASCADE, verbose_name='Язык')
+
+    translations = models.ManyToManyField('self', verbose_name='Перевод', symmetrical=True, blank=True)
+    users = models.ManyToManyField('authentication.User', verbose_name='Слова пользователей', symmetrical=True, blank=True)
 
     class Meta:
         verbose_name = 'Слово'
