@@ -37,7 +37,9 @@ function WordModal({showModal, setShowModal, modalData, setModalData, languages}
             {
                 translations: translations
             }
-        )
+        ).finally(() => {
+            handleCloseModalDialog()
+        })
     }
 
     const handleDelete = () => {
@@ -87,7 +89,7 @@ function WordModal({showModal, setShowModal, modalData, setModalData, languages}
                             <img src={add_icon} height={32} width={32} className='mx-3 mb-3' onClick={handleAddRow}/>
                         </div>
                         <div className='flex-row'>
-                            <Button variant='success' onClick={handleEdit}>Save</Button>
+                            <Button variant='success' type='submit' onClick={handleEdit}>Save</Button>
                             <Button variant='outline-success' className='mx-2' onClick={handleIsEditing}>Cancel</Button>
                         </div>
                     </div>

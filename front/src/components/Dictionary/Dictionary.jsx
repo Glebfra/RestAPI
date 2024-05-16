@@ -10,6 +10,8 @@ function Dictionary() {
 
     const pageButtonsEnum = {NEXT: 'next', PREVIOUS: 'previous'}
 
+    const [seed, setSeed] = useState(Math.random())
+
     const wordsStateEnum = {ALL: 'all', ACCOUNT: 'account'}
     const [wordsState, setWordsState] = useState(wordsStateEnum.ALL)
 
@@ -67,7 +69,7 @@ function Dictionary() {
         ).then(response => {
             setData(response.data)
         })
-    }, [selectedLanguage, wordsState, offset, limit, setData]);
+    }, [selectedLanguage, wordsState, offset, limit, setData, seed]);
 
     const handleChangeLanguage = ({currentTarget: obj}) => {
         setSelectedLanguage(languages[obj.id]['id'] === selectedLanguage ? 0 : languages[obj.id]['id'])
@@ -97,7 +99,7 @@ function Dictionary() {
     return (
         <Container>
             <header>
-                <Menu/>
+                <Menu searchable searchText='Search words'/>
             </header>
             <div className='main-container'>
                 <WordModal
@@ -143,7 +145,7 @@ function Dictionary() {
                         disabled={localStorage.getItem('access') === null}
                     ><font face='Calibri' size={4}>Add word</font></Button>
                 </div>
-                <div className='main-container menu-list ms-5'>
+                <div className='main-container-item menu-list ms-5'>
                     {languages.map((item, index) => (
                         <Button
                             id={index}
