@@ -1,23 +1,9 @@
 import React from "react"
-import {Button, FloatingLabel, Form, Nav, Navbar} from "react-bootstrap"
+import {Nav, Navbar} from "react-bootstrap"
 import account_avatar from "../../assets/account_avatar.svg"
 import book_icon from "../../assets/book_icon.svg"
 import science_icon from "../../assets/science_icon.svg"
-
-
-const MenuSearch = (
-    <Form className="d-flex">
-        <FloatingLabel label="Search words" className="me-2" controlId="floatingInput">
-            <Form.Control
-                type="search"
-                name="search"
-                placeholder="Search words"
-            />
-        </FloatingLabel>
-        <Button variant="outline-success">Search</Button>
-    </Form>
-)
-
+import MenuSearch from "./MenuSearch";
 
 function Menu() {
     return (
@@ -35,7 +21,7 @@ function Menu() {
                 </Nav>
             </Navbar.Collapse>
             <Navbar.Collapse className="justify-content-end">
-                {MenuSearch}
+                <MenuSearch/>
             </Navbar.Collapse>
         </Navbar>
     )
