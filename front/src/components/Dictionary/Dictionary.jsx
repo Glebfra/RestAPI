@@ -5,20 +5,23 @@ import axios from "axios";
 import AddWordModal from "./AddWordModal";
 import WordModal from "./WordModal";
 
-// TODO Create the dictionary page with possibility to add new word to user account
 function Dictionary() {
     const wordsStateEnum = {ALL: 'all', ACCOUNT: 'account'}
+    const [wordsState, setWordsState] = useState(wordsStateEnum.ALL)
 
+    const [languages, setLanguages] = useState([])
+    const [selectedLanguage, setSelectedLanguage] = useState(0)
+
+    const [showModal, setShowModal] = useState(false)
+    const [showAddWordModal, setShowAddWordModal] = useState(false)
+
+    const [dataUrl, setDataUrl] = useState('dictionary/words/')
     const [data, setData] = useState({
         count: 0,
         next: null,
         previous: null,
         results: []
     })
-    const [languages, setLanguages] = useState([])
-    const [wordsState, setWordsState] = useState(wordsStateEnum.ALL)
-    const [showModal, setShowModal] = useState(false)
-    const [showAddWordModal, setShowAddWordModal] = useState(false)
     const [modalData, setModalData] = useState({
         id: 0,
         word: '',
@@ -27,35 +30,41 @@ function Dictionary() {
         language: 1
     })
 
-    const getData = (url = 'dictionary/words/') => {
+    useEffect(() => {
         axios.get(
-            url
+            dataUrl
         ).then(response => {
             setData(response.data)
         })
-    }
-    const getLanguages = (url = 'dictionary/languages/') => {
+    }, [setData, dataUrl])
+
+    useEffect(() => {
         axios.get(
-            url
+            'dictionary/languages/'
         ).then(response => {
-            const data = []
-            response.data.results.map(item => {
-                data[item.id] = item.name
-            })
-            setLanguages(data)
+            setLanguages(response.data.results)
         })
+    }, [setLanguages])
+
+    useEffect(() => {
+        if (selectedLanguage === 0) {
+            setDataUrl(`dictionary/words/`)
+        } else {
+            setDataUrl(`dictionary/words/?language=${selectedLanguage}`)
+        }
+    }, [setDataUrl, selectedLanguage]);
+
+    const handleChangeLanguage = ({currentTarget: obj}) => {
+        setSelectedLanguage(languages[obj.id]['id'] === selectedLanguage ? 0 : languages[obj.id]['id'])
     }
 
-    useEffect(() => getData(), [setData])
-    useEffect(() => getLanguages(), [setLanguages])
-
-    const getAccountWordsHandler = () => {
-        getData('dictionary/account/words/')
+    const handleAccountWords = () => {
+        setDataUrl('dictionary/account/words/')
         setWordsState(wordsStateEnum.ACCOUNT)
     }
 
-    const getAllWordsHandler = () => {
-        getData('dictionary/words/')
+    const handleAllWords = () => {
+        setDataUrl('dictionary/words/')
         setWordsState(wordsStateEnum.ALL)
     }
 
@@ -78,6 +87,7 @@ function Dictionary() {
                     showModal={showModal}
                     setShowModal={setShowModal}
                     modalData={modalData}
+                    setModalData={setModalData}
                     languages={languages}
                 />
                 <AddWordModal
@@ -89,28 +99,43 @@ function Dictionary() {
                     <Button
                         className='menu-list-button'
                         variant={wordsState === wordsStateEnum.ALL ? 'success' : 'outline-success'}
-                        onClick={getAllWordsHandler}
-                    >
-                        <font face='Calibri' size={4}>All words</font>
-                    </Button>
+                        onClick={handleAllWords}
+                    ><font face='Calibri' size={4}>All words</font></Button>
                     <Button
                         className='menu-list-button'
                         variant={wordsState === wordsStateEnum.ACCOUNT ? 'success' : 'outline-success'}
-                        onClick={getAccountWordsHandler}
-                        disabled={!localStorage.getItem('access')}
-                    >
-                        <font face='Calibri' size={4}>Your words</font>
-                    </Button>
+                        onClick={handleAccountWords}
+                        disabled={localStorage.getItem('access') === null}
+                    ><font face='Calibri' size={4}>Your words</font></Button>
                 </div>
                 <div className='main-container-item words-grid-container'>
                     {data.results.map((item, index) => (
-                        <div id={index} className='words-grid-item' onClick={handleModalDialog}>
+                        <div
+                            id={index.toString()}
+                            key={index}
+                            className='words-grid-item'
+                            onClick={handleModalDialog}
+                        >
                             <font face='Calibri' size={5}>{item.word}</font>
                         </div>
                     ))}
-                    <Button variant='outline-success' className='words-grid-container' onClick={handleAddWordDialog}>
-                        <font face='Calibri' size={4}>Add word</font>
-                    </Button>
+                    <Button
+                        variant='outline-success'
+                        className='words-grid-container words-grid-item'
+                        onClick={handleAddWordDialog}
+                        disabled={localStorage.getItem('access') === null}
+                    ><font face='Calibri' size={4}>Add word</font></Button>
+                </div>
+                <div className='main-container menu-list ms-5'>
+                    {languages.map((item, index) => (
+                        <Button
+                            id={index}
+                            key={index}
+                            className='menu-list-button'
+                            variant={item.id === selectedLanguage ? 'success' : 'outline-success'}
+                            onClick={e => handleChangeLanguage(e)}
+                        ><font face='Calibri' size={4}>{item.name}</font></Button>
+                    ))}
                 </div>
             </div>
             <footer>
@@ -131,4 +156,4 @@ function Dictionary() {
     )
 }
 
-export default Dictionary;
+export default Dictionary

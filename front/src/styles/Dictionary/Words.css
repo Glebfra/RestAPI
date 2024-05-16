@@ -34,6 +34,8 @@
 
 .words-grid-item {
     padding: 20px;
+    height: 10vh;
+    width: 18vh;
     text-align: center;
 }
 
