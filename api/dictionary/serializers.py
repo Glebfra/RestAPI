@@ -30,10 +30,11 @@ class WordSerializer(serializers.ModelSerializer):
     translations_details = TranslationSerializer(many=True, read_only=True, source='translations')
 
     def validate(self, attrs):
-        super().validate(attrs)
         translations = attrs.get('translations')
-        if translations is None or not isinstance(translations, list):
-            raise serializers.ValidationError('Please provide dictionary or integer translations')
+        if translations is None:
+            return attrs
+        if not isinstance(translations, list):
+            raise serializers.ValidationError('Please provide dictionary')
         return attrs
 
     class Meta:

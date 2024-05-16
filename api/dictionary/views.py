@@ -75,6 +75,7 @@ class APIUserWordsViewSet(APIView):
         data = request.data
         if (translations := data.get('translations')) is not None:
             new_translations = []
+            new_translations_words = []
             for translation in translations:
                 if isinstance(translation, int):
                     new_translations.append(translation)
@@ -86,7 +87,11 @@ class APIUserWordsViewSet(APIView):
                     )
                     if created:
                         new_translation_word.save()
+                    new_translations_words.append(new_translation_word)
                     new_translations.append(new_translation_word.pk)
+            for i in range(len(new_translations) - 1):
+                for j in range(i+1, len(new_translations_words)):
+                    new_translations_words[i].translations.add(new_translations_words[j].pk)
             data['translations'] = new_translations
         serializer = WordSerializer(word, data=data, partial=True)
         if serializer.is_valid():

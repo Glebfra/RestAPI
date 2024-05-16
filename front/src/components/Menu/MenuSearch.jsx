@@ -1,16 +1,15 @@
 import {Button, FloatingLabel, Form} from "react-bootstrap";
 import React, {useState} from "react";
-import axios from "axios";
+import {Navigate} from "react-router-dom";
 
 function MenuSearch() {
-    const [data, setData] = useState(null)
+    const queryParams = new URLSearchParams(window.location.search)
+
+    const [data, setData] = useState(queryParams.get('word'))
+    const [search, setSearch] = useState(false)
 
     const handleSearch = () => {
-        axios.get(
-            `dictionary/words/?word=${data}`
-        ).then(response => {
-            console.log(response)
-        })
+        setSearch(true)
     }
 
     const handleChange = ({currentTarget: input}) => {
@@ -18,17 +17,21 @@ function MenuSearch() {
     }
 
     return (
-        <Form className="d-flex">
-            <FloatingLabel label="Search words" className="me-2" controlId="floatingInput">
-                <Form.Control
-                    type="search"
-                    name="search"
-                    placeholder="Search words"
-                    onChange={e => handleChange(e)}
-                />
-            </FloatingLabel>
-            <Button variant="outline-success" onClick={handleSearch}>Search</Button>
-        </Form>
+        <div>
+            {search ? <Navigate to={`?word=${data}`} replace/> : <></>}
+            <Form className="d-flex">
+                <FloatingLabel label="Search words" className="me-2" controlId="floatingInput">
+                    <Form.Control
+                        type="search"
+                        name="search"
+                        placeholder="Search words"
+                        value={data}
+                        onChange={e => handleChange(e)}
+                    />
+                </FloatingLabel>
+                <Button variant="outline-success" onClick={handleSearch}>Search</Button>
+            </Form>
+        </div>
     )
 }
 
