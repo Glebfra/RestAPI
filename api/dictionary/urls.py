@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import APILanguagesViewSet, APIUserWordsViewSet, APIWordsViewSet
+from .views import APILanguagesViewSet, APIUserAddWordsViewSet, APIUserWordsViewSet, APIWordsViewSet
 
 urlpatterns = [
     path('words/', APIWordsViewSet.as_view()),
@@ -8,4 +8,5 @@ urlpatterns = [
     path('languages/', APILanguagesViewSet.as_view()),
     path('account/words/', APIUserWordsViewSet.as_view()),
     path('account/words/<int:pk>/', APIUserWordsViewSet.as_view()),
+    path('account/words/add/', APIUserAddWordsViewSet.as_view())
 ]

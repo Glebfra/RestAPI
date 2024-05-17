@@ -71,6 +71,10 @@ function Dictionary() {
         })
     }, [selectedLanguage, wordsState, offset, limit, setData, seed]);
 
+    const updatePage = () => {
+        setSeed(Math.random())
+    }
+
     const handleChangeLanguage = ({currentTarget: obj}) => {
         setSelectedLanguage(languages[obj.id]['id'] === selectedLanguage ? 0 : languages[obj.id]['id'])
     }
@@ -108,11 +112,13 @@ function Dictionary() {
                     modalData={modalData}
                     setModalData={setModalData}
                     languages={languages}
+                    updatePage={updatePage}
                 />
                 <AddWordModal
                     showAddWordModal={showAddWordModal}
                     setShowAddWordModal={setShowAddWordModal}
                     languages={languages}
+                    updatePage={updatePage}
                 />
                 <div className='main-container-item menu-list'>
                     <Button

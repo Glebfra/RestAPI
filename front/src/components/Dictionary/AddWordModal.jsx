@@ -2,7 +2,7 @@ import {Button, FloatingLabel, Form, Modal, ModalBody, ModalHeader} from "react-
 import React, {useState} from "react";
 import axios from "axios";
 
-function AddWordModal({showAddWordModal, setShowAddWordModal, languages}) {
+function AddWordModal({showAddWordModal, setShowAddWordModal, languages, updatePage}) {
     const [data, setData] = useState({})
 
     const handleChange = ({currentTarget: input}) => {
@@ -23,6 +23,7 @@ function AddWordModal({showAddWordModal, setShowAddWordModal, languages}) {
             console.log(error)
         }).finally(() => {
             handleCloseDialog()
+            updatePage()
         })
     }
 
@@ -34,7 +35,7 @@ function AddWordModal({showAddWordModal, setShowAddWordModal, languages}) {
                     <FloatingLabel controlId='floatingInput' label='Word'>
                         <Form.Control type='textarea' name='word' placeholder='Word' onChange={e => handleChange(e)}/>
                     </FloatingLabel>
-                    <Form.Select name='language' aria-label='Choose language' className='my-3'
+                    <Form.Select name='language' aria-label='Choose language' className='my-3' defaultValue='0'
                                  onChange={e => handleChange(e)}>
                         <option value='0' disabled>Select language</option>
                         {languages.map((item, index) => (
