@@ -6,7 +6,6 @@ import {Navigate} from "react-router-dom";
 
 
 function Login() {
-    const [isLogged, setIsLogged] = useState(false)
     const [data, setData] = useState({})
     const [isError, setIsError] = useState(false)
 
@@ -24,14 +23,11 @@ function Login() {
         ).then(response => {
             localStorage.setItem('access', response.data.access)
             localStorage.setItem('refresh', response.data.refresh)
-            setIsLogged(true)
         }).catch(error => {
             setIsError(true)
-        })
-    }
-
-    if (isLogged) {
-        return <Navigate to={'/account'} replace/>
+        }).finally(() => (
+            <Navigate to={'/account'} replace/>
+        ))
     }
 
     return (
