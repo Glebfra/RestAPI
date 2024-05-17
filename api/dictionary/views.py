@@ -1,7 +1,7 @@
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED, HTTP_202_ACCEPTED, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_202_ACCEPTED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -22,7 +22,7 @@ class APIWordsViewSet(APIView):
         if (language := query_params.get('language')) is not None:
             queryset = queryset.filter(language__id=language)
         if (word := query_params.get('word')) is not None:
-            queryset = queryset.filter(word__contains=word)
+            queryset = queryset.filter(word__contains=word.capitalize())
         if (words := query_params.get('words')) is not None:
             queryset = queryset.filter(word__in=words.split(';'))
 
@@ -54,7 +54,7 @@ class APIUserWordsViewSet(APIView):
         if (language := query_params.get('language')) is not None:
             queryset = queryset.filter(language__id=language)
         if (word := query_params.get('word')) is not None:
-            queryset = queryset.filter(word__contains=word)
+            queryset = queryset.filter(word__contains=word.capitalize())
         if (words := query_params.get('words')) is not None:
             queryset = queryset.filter(word__in=words.split(';'))
 
@@ -75,6 +75,7 @@ class APIUserWordsViewSet(APIView):
         data = request.data
         if (translations := data.get('translations')) is not None:
             new_translations = []
+            new_translations_words = []
             for translation in translations:
                 if isinstance(translation, int):
                     new_translations.append(translation)
@@ -86,7 +87,11 @@ class APIUserWordsViewSet(APIView):
                     )
                     if created:
                         new_translation_word.save()
+                    new_translations_words.append(new_translation_word)
                     new_translations.append(new_translation_word.pk)
+            for i in range(len(new_translations) - 1):
+                for j in range(i+1, len(new_translations_words)):
+                    new_translations_words[i].translations.add(new_translations_words[j].pk)
             data['translations'] = new_translations
         serializer = WordSerializer(word, data=data, partial=True)
         if serializer.is_valid():
@@ -98,3 +103,16 @@ class APIUserWordsViewSet(APIView):
         word = Words.objects.get(pk=pk)
         word.delete()
         return Response(status=HTTP_202_ACCEPTED)
+
+
+class APIUserAddWordsViewSet(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
+
+    def post(self, request):
+        user = self.request.user
+        word = Words.objects.get(pk=request.data.get('id'))
+        user.words.add(word)
+        user.save()
+        serializer = WordSerializer(word)
+        return Response(serializer.data, status=HTTP_200_OK)

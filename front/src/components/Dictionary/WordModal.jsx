@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import add_icon from "../../assets/add_icon.svg"
 
-function WordModal({showModal, setShowModal, modalData, setModalData, languages}) {
+function WordModal({showModal, setShowModal, modalData, setModalData, languages, updatePage}) {
     const [isEditing, setIsEditing] = useState(false)
 
     const handleCloseModalDialog = () => {
@@ -30,6 +30,19 @@ function WordModal({showModal, setShowModal, modalData, setModalData, languages}
         }))
     }
 
+    const handleAddToAccount = () => {
+        axios.post(
+            'dictionary/account/words/add/',
+            {
+                id: modalData.id
+            }
+        ).then(response => {
+            console.log(response)
+        }).finally(() => {
+            handleCloseModalDialog()
+        })
+    }
+
     const handleEdit = () => {
         const translations = modalData.translations_details.map(item => ({word: item.word, language: item.language}))
         axios.patch(
@@ -37,7 +50,10 @@ function WordModal({showModal, setShowModal, modalData, setModalData, languages}
             {
                 translations: translations
             }
-        )
+        ).finally(() => {
+            handleCloseModalDialog()
+            updatePage()
+        })
     }
 
     const handleDelete = () => {
@@ -45,6 +61,7 @@ function WordModal({showModal, setShowModal, modalData, setModalData, languages}
             `dictionary/account/words/${modalData.id}/`
         ).finally(() => {
             handleCloseModalDialog()
+            updatePage()
         })
     }
 
@@ -87,7 +104,7 @@ function WordModal({showModal, setShowModal, modalData, setModalData, languages}
                             <img src={add_icon} height={32} width={32} className='mx-3 mb-3' onClick={handleAddRow}/>
                         </div>
                         <div className='flex-row'>
-                            <Button variant='success' onClick={handleEdit}>Save</Button>
+                            <Button variant='success' type='submit' onClick={handleEdit}>Save</Button>
                             <Button variant='outline-success' className='mx-2' onClick={handleIsEditing}>Cancel</Button>
                         </div>
                     </div>
@@ -96,6 +113,7 @@ function WordModal({showModal, setShowModal, modalData, setModalData, languages}
                     <div className='d-flex flex-row'>
                         <Button variant='success' onClick={handleIsEditing}>Edit</Button>
                         <Button variant='danger' className='mx-2' onClick={handleDelete}>Delete</Button>
+                        <Button className='mx-4' variant='outline-primary' onClick={handleAddToAccount}>Add to account</Button>
                     </div>
                 )}
             </ModalBody>

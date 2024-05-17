@@ -6,6 +6,12 @@ import AddWordModal from "./AddWordModal";
 import WordModal from "./WordModal";
 
 function Dictionary() {
+    const queryParams = new URLSearchParams(window.location.search)
+
+    const pageButtonsEnum = {NEXT: 'next', PREVIOUS: 'previous'}
+
+    const [seed, setSeed] = useState(Math.random())
+
     const wordsStateEnum = {ALL: 'all', ACCOUNT: 'account'}
     const [wordsState, setWordsState] = useState(wordsStateEnum.ALL)
 
@@ -15,7 +21,9 @@ function Dictionary() {
     const [showModal, setShowModal] = useState(false)
     const [showAddWordModal, setShowAddWordModal] = useState(false)
 
-    const [dataUrl, setDataUrl] = useState('dictionary/words/')
+    const [limit, setLimit] = useState(30)
+    const [offset, setOffset] = useState(0)
+
     const [data, setData] = useState({
         count: 0,
         next: null,
@@ -32,14 +40,6 @@ function Dictionary() {
 
     useEffect(() => {
         axios.get(
-            dataUrl
-        ).then(response => {
-            setData(response.data)
-        })
-    }, [setData, dataUrl])
-
-    useEffect(() => {
-        axios.get(
             'dictionary/languages/'
         ).then(response => {
             setLanguages(response.data.results)
@@ -47,24 +47,43 @@ function Dictionary() {
     }, [setLanguages])
 
     useEffect(() => {
-        if (selectedLanguage === 0) {
-            setDataUrl(`dictionary/words/`)
+        const dataUrl = new URL('dictionary/words/', axios.defaults.baseURL)
+        queryParams.forEach((item, index) => {
+            dataUrl.searchParams.set(index, item)
+        })
+        if (wordsState === wordsStateEnum.ACCOUNT) {
+            dataUrl.pathname = 'dictionary/account/words/'
         } else {
-            setDataUrl(`dictionary/words/?language=${selectedLanguage}`)
+            dataUrl.pathname = 'dictionary/words/'
         }
-    }, [setDataUrl, selectedLanguage]);
+        if (selectedLanguage === 0) {
+            dataUrl.searchParams.delete('language')
+        } else {
+            dataUrl.searchParams.set('language', selectedLanguage.toString())
+        }
+        dataUrl.searchParams.set('offset', offset.toString())
+        dataUrl.searchParams.set('limit', limit.toString())
+
+        axios.get(
+            dataUrl
+        ).then(response => {
+            setData(response.data)
+        })
+    }, [selectedLanguage, wordsState, offset, limit, setData, seed]);
+
+    const updatePage = () => {
+        setSeed(Math.random())
+    }
 
     const handleChangeLanguage = ({currentTarget: obj}) => {
         setSelectedLanguage(languages[obj.id]['id'] === selectedLanguage ? 0 : languages[obj.id]['id'])
     }
 
     const handleAccountWords = () => {
-        setDataUrl('dictionary/account/words/')
         setWordsState(wordsStateEnum.ACCOUNT)
     }
 
     const handleAllWords = () => {
-        setDataUrl('dictionary/words/')
         setWordsState(wordsStateEnum.ALL)
     }
 
@@ -77,10 +96,14 @@ function Dictionary() {
         setShowAddWordModal(!showAddWordModal)
     }
 
+    const handlePage = (type) => {
+        setOffset(new URL(data[type]).searchParams.get('offset') ?? 0)
+    }
+
     return (
         <Container>
             <header>
-                <Menu/>
+                <Menu searchable searchText='Search words'/>
             </header>
             <div className='main-container'>
                 <WordModal
@@ -89,11 +112,13 @@ function Dictionary() {
                     modalData={modalData}
                     setModalData={setModalData}
                     languages={languages}
+                    updatePage={updatePage}
                 />
                 <AddWordModal
                     showAddWordModal={showAddWordModal}
                     setShowAddWordModal={setShowAddWordModal}
                     languages={languages}
+                    updatePage={updatePage}
                 />
                 <div className='main-container-item menu-list'>
                     <Button
@@ -126,7 +151,7 @@ function Dictionary() {
                         disabled={localStorage.getItem('access') === null}
                     ><font face='Calibri' size={4}>Add word</font></Button>
                 </div>
-                <div className='main-container menu-list ms-5'>
+                <div className='main-container-item menu-list ms-5'>
                     {languages.map((item, index) => (
                         <Button
                             id={index}
@@ -143,11 +168,13 @@ function Dictionary() {
                     <Button
                         className='page-selection-item'
                         variant='outline-success'
+                        onClick={() => handlePage(pageButtonsEnum.PREVIOUS)}
                         disabled={data.previous === null}
                     >Previous</Button>
                     <Button
                         className='page-selection-item'
                         variant='outline-success'
+                        onClick={() => handlePage(pageButtonsEnum.NEXT)}
                         disabled={data.next === null}
                     >Next</Button>
                 </div>
