@@ -1,5 +1,5 @@
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import *
 from rest_framework.views import APIView
@@ -25,6 +25,18 @@ class APIWordsViewSet(APIView):
         paginated_queryset = pagination.paginate_queryset(queryset, request, view=self)
         serializer = WordSerializer(paginated_queryset, many=True)
         return pagination.get_paginated_response(serializer.data)
+
+
+class APIProtectedWordsViewSet(APIView):
+    pagination_class = LimitOffsetPagination
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        serializer = WordSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 class APILanguagesViewSet(APIView):
