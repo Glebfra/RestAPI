@@ -6,8 +6,8 @@ from .models import *
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Language
-        fields = '__all__'
-        read_only_fields = ['id']
+        fields = ['id', 'name']
+        read_only_fields = ['id', 'name']
 
     def create(self, validated_data):
         model = self.Meta.model(**validated_data)
@@ -34,7 +34,7 @@ class WordSerializer(serializers.ModelSerializer):
         if translations is None:
             return attrs
         if not isinstance(translations, list):
-            raise serializers.ValidationError('Please provide dictionary')
+            raise serializers.ValidationError('Please provide list of translations')
         return attrs
 
     class Meta:
