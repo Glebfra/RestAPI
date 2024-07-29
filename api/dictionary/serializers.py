@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from authentication.serializers import UserSerializer
 from .models import *
 
 
@@ -14,28 +15,16 @@ class LanguageSerializer(serializers.ModelSerializer):
         model.save()
         return model
 
-    def update(self, instance, validated_data):
-        instance = super(LanguageSerializer, self).update(instance, validated_data)
-        return instance
-
 
 class TranslationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Words
         fields = ['id', 'word', 'language']
-        read_only_fields = ['id', 'word', 'language']
+        read_only_fields = ['id']
 
 
 class WordSerializer(serializers.ModelSerializer):
     translations_details = TranslationSerializer(many=True, read_only=True, source='translations')
-
-    def validate(self, attrs):
-        translations = attrs.get('translations')
-        if translations is None:
-            return attrs
-        if not isinstance(translations, list):
-            raise serializers.ValidationError('Please provide list of translations')
-        return attrs
 
     class Meta:
         model = Words
