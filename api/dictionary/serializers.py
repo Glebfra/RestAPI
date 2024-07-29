@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from authentication.serializers import UserSerializer
 from .models import *
 
 
@@ -32,7 +31,10 @@ class WordSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
     def create(self, validated_data):
+        translations = validated_data.pop('translations', [])
         model = self.Meta.model(**validated_data)
+        model.save()
+        model.translations.set(translations)
         model.save()
         return model
 

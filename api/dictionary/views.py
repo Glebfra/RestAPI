@@ -12,6 +12,11 @@ class APIWordsViewSet(ListAPIView):
     permission_classes = (AllowAny,)
 
 
+class APICreateWordsViewSet(CreateAPIView):
+    serializer_class = WordSerializer
+    permission_classes = (IsAuthenticated,)
+
+
 class APILanguagesViewSet(ListAPIView):
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer

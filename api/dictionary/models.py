@@ -25,7 +25,7 @@ class Words(models.Model):
     word = models.CharField(max_length=255, verbose_name='Слово', unique=True)
     language = models.ForeignKey(Language, on_delete=models.CASCADE, verbose_name='Язык')
     translations = models.ManyToManyField('self', verbose_name='Перевод', symmetrical=True, blank=True)
-    users = models.ManyToManyField(User, verbose_name='Пользователи', symmetrical=True, blank=True)
+    users = models.ManyToManyField(User, verbose_name='Пользователи', symmetrical=True, related_name='words', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
