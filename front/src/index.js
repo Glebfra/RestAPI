@@ -10,7 +10,7 @@ const access = localStorage.getItem('access')
 if (access !== null) {
     axios.defaults.headers['Authorization'] = `Bearer ${access}`
 }
-axios.defaults.baseURL = 'http://localhost:8000/'
+axios.defaults.baseURL = 'http://localhost:8000'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

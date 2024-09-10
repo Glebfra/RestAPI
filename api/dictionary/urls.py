@@ -7,4 +7,5 @@ urlpatterns = [
     path('words/<int:pk>', WordDetailedApiView.as_view(), name='word_api_detailed'),
     path('pronounces/', PronounceCreateApiView.as_view(), name='pronounce_create_api'),
     path('pronounces/<str:word>', PronounceApiView.as_view(), name='pronounce_api'),
+    path('languages/', LanguageApiView.as_view(), name='language_api')
 ]

@@ -3,10 +3,17 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from dictionary.models import Word, WordPronounce
+from dictionary.models import Language, Word, WordPronounce
 from dictionary.serializers import (
-    PronounceSerializer, WordDetailedSerializer, WordSerializer
+    LanguageSerializer, PronounceSerializer, WordDetailedSerializer, WordSerializer
 )
+
+
+class LanguageApiView(APIView):
+    def get(self, request):
+        languages = Language.objects.all()
+        serializer = LanguageSerializer(languages, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class PronounceCreateApiView(APIView):
@@ -40,6 +47,8 @@ class WordApiView(APIView):
 
     def get(self, request):
         words = Word.objects.all()
+        if language := request.query_params.get('language', False):
+            words = words.filter(language=language)
         paginator = self.pagination_class()
         words = paginator.paginate_queryset(words, request)
         serializer = self.serializer_class(words, many=True)
