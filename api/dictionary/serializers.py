@@ -24,7 +24,7 @@ class PronounceSerializer(serializers.ModelSerializer):
 class WordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Word
-        fields = ('id', 'word', 'language', 'translations')
+        fields = ('word', 'language')
 
 
 class WordDetailedSerializer(serializers.ModelSerializer):
