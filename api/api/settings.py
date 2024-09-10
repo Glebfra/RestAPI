@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 
     'dictionary.apps.DictionaryConfig',
-    'science.apps.ScienceConfig',
     'authentication.apps.AuthenticationConfig',
 ]
 
