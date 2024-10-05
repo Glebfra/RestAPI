@@ -1,6 +1,11 @@
+from typing import TypeVar
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.db import models
+
+
+Word = TypeVar('Word', bound='Word')
 
 
 class UserManager(BaseUserManager):
@@ -32,3 +37,9 @@ class User(AbstractUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    def add_word(self, word: Word) -> None:
+        self.words.add(word)
+
+    def remove_word(self, word: Word) -> None:
+        self.words.remove(word)

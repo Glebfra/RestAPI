@@ -1,3 +1,5 @@
+from typing import Self
+
 from django.db import models
 
 from authentication.models import User
@@ -18,9 +20,16 @@ class Language(models.Model):
         super(Language, self).save(*args, **kwargs)
 
 
+class WordPronounce(models.Model):
+    pronounce = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.pronounce
+
+
 class Word(models.Model):
     word = models.CharField(max_length=255)
-    pronounces = models.ManyToManyField('WordPronounce', related_name='words', blank=True)
+    pronounces = models.ManyToManyField(WordPronounce, related_name='words', blank=True)
     translations = models.ManyToManyField('self', symmetrical=True, blank=True)
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -34,9 +43,8 @@ class Word(models.Model):
             setattr(self, 'word', word.capitalize())
         super(Word, self).save(*args, **kwargs)
 
+    def add_translation(self, translation: Self) -> None:
+        self.translations.add(translation)
 
-class WordPronounce(models.Model):
-    pronounce = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.pronounce
+    def remove_translation(self, translation: Self) -> None:
+        self.translations.remove(translation)

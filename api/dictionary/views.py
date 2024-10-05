@@ -48,7 +48,7 @@ class UserWordApiView(APIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request) -> Response:
-        words = self.request.user.words
+        words = self.request.user.words.all()
         if language := request.query_params.get('language', False):
             words = words.filter(language=language)
         if word := request.query_params.get('word', False):
@@ -57,6 +57,44 @@ class UserWordApiView(APIView):
         words = paginator.paginate_queryset(words, request)
         serializer = self.serializer_class(words, many=True)
         return paginator.get_paginated_response(serializer.data)
+
+
+class UserAddWordApiView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request) -> Response:
+        user = self.request.user
+        word = request.data.get('word', None)
+        language = request.data.get('language', None)
+        if word is None:
+            return Response('No word provided', status=status.HTTP_400_BAD_REQUEST)
+        if language is None:
+            return Response('No language provided', status=status.HTTP_400_BAD_REQUEST)
+
+        language = Language.objects.get(pk=language)
+        word, created = Word.objects.get_or_create(word=word, language=language)
+        if created:
+            word.save()
+        user.add_word(word)
+        user.save()
+        return Response('Word added', status=status.HTTP_202_ACCEPTED)
+
+
+class UserDeleteWordApiView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request) -> Response:
+        user = self.request.user
+
+        try:
+            word_id = request.data.get('word_id')
+        except Word.DoesNotExist:
+            return Response('Word does not exist', status=status.HTTP_400_BAD_REQUEST)
+
+        word = Word.objects.get(pk=word_id)
+        user.remove_word(word)
+        user.save()
+        return Response('Word removed', status=status.HTTP_202_ACCEPTED)
 
 
 class WordApiView(APIView):
@@ -89,6 +127,7 @@ class WordApiView(APIView):
 
 class WordDetailedApiView(APIView):
     serializer_class = WordDetailedSerializer
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, pk: int) -> Response:
         word = Word.objects.get(pk=pk)
