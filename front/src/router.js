@@ -1,7 +1,7 @@
 import {createBrowserRouter} from "react-router-dom"
 import React from "react"
 import Main from "./components/Index";
-import Words from "./components/Dictionary/Words";
+import Dictionary from "./components/Dictionary/Dictionary";
 
 const router = createBrowserRouter([
     {
@@ -10,7 +10,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/dictionary",
-        element: <Words/>
+        element: <Dictionary/>
     }
 ])
 

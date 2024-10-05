@@ -14,8 +14,6 @@ function Menu({searchable: searchable, searchText: searchText = 'Foo'}) {
                 <Nav className="me-auto align-items-center">
                     <img alt="book_icon" src={book_icon} height={24} width={24} className="ms-4"/>
                     <Nav.Link href="/dictionary">Dictionary</Nav.Link>
-                    <img alt="book_icon" src={science_icon} height={24} width={24} className="ms-2"/>
-                    <Nav.Link href="/science">Science</Nav.Link>
                     <img alt="account_icon" src={account_avatar} height={24} width={24} className="ms-2"/>
                     <Nav.Link href="/account">Account</Nav.Link>
                 </Nav>
@@ -31,4 +29,4 @@ function Menu({searchable: searchable, searchText: searchText = 'Foo'}) {
     )
 }
 
-export default Menu
+export default Menu;
