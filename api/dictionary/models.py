@@ -11,6 +11,13 @@ class Language(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if name := getattr(self, 'name', False):
+            setattr(self, 'name', name.capitalize())
+        if code := getattr(self, 'code', False):
+            setattr(self, 'code', code.lower())
+        super(Language, self).save(*args, **kwargs)
+
 
 class Word(models.Model):
     word = models.CharField(max_length=255)
@@ -18,9 +25,15 @@ class Word(models.Model):
     translations = models.ManyToManyField('self', symmetrical=True, blank=True)
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    users = models.ManyToManyField(User, related_name='words', symmetrical=True, blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.word
+
+    def save(self, *args, **kwargs) -> None:
+        if word := getattr(self, 'word', False):
+            setattr(self, 'word', word.capitalize())
+        super(Word, self).save(*args, **kwargs)
 
 
 class WordPronounce(models.Model):

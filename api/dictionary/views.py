@@ -1,5 +1,6 @@
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,7 +11,7 @@ from dictionary.serializers import (
 
 
 class LanguageApiView(APIView):
-    def get(self, request):
+    def get(self, request) -> Response:
         languages = Language.objects.all()
         serializer = LanguageSerializer(languages, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -19,7 +20,7 @@ class LanguageApiView(APIView):
 class PronounceCreateApiView(APIView):
     serializer_class = PronounceSerializer
 
-    def post(self, request):
+    def post(self, request) -> Response:
         try:
             pronounce = WordPronounce.objects.get(pronounce=request.data.get('pronounce', None))
             serializer = PronounceSerializer(pronounce)
@@ -35,26 +36,45 @@ class PronounceCreateApiView(APIView):
 class PronounceApiView(APIView):
     serializer_class = PronounceSerializer
 
-    def get(self, request, word: str):
+    def get(self, request, word: str) -> Response:
         pronounces = WordPronounce.objects.filter(words__word=word)
         serializer = PronounceSerializer(pronounces, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserWordApiView(APIView):
+    serializer_class = WordSerializer
+    pagination_class = PageNumberPagination
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request) -> Response:
+        words = self.request.user.words
+        if language := request.query_params.get('language', False):
+            words = words.filter(language=language)
+        if word := request.query_params.get('word', False):
+            words = words.filter(word=word.capitalize())
+        paginator = self.pagination_class()
+        words = paginator.paginate_queryset(words, request)
+        serializer = self.serializer_class(words, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 class WordApiView(APIView):
     serializer_class = WordSerializer
     pagination_class = PageNumberPagination
 
-    def get(self, request):
+    def get(self, request) -> Response:
         words = Word.objects.all()
         if language := request.query_params.get('language', False):
             words = words.filter(language=language)
+        if word := request.query_params.get('word', False):
+            words = words.filter(word=word.capitalize())
         paginator = self.pagination_class()
         words = paginator.paginate_queryset(words, request)
         serializer = self.serializer_class(words, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-    def post(self, request):
+    def post(self, request) -> Response:
         try:
             word = Word.objects.get(word=request.data.get('word', None))
             serializer = WordSerializer(word)
@@ -70,12 +90,12 @@ class WordApiView(APIView):
 class WordDetailedApiView(APIView):
     serializer_class = WordDetailedSerializer
 
-    def get(self, request, pk: int):
+    def get(self, request, pk: int) -> Response:
         word = Word.objects.get(pk=pk)
         serializer = self.serializer_class(word)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def patch(self, request, pk: int):
+    def patch(self, request, pk: int) -> Response:
         word = Word.objects.get(pk=pk)
         serializer = self.serializer_class(word, request.data, partial=True)
         if serializer.is_valid():
@@ -83,7 +103,7 @@ class WordDetailedApiView(APIView):
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, pk: int):
+    def put(self, request, pk: int) -> Response:
         word = Word.objects.get(pk=pk)
         serializer = self.serializer_class(word, request.data)
         if serializer.is_valid():
