@@ -108,15 +108,3 @@ class WordApiView(APIView):
         words = paginator.paginate_queryset(words, request)
         serializer = self.serializer_class(words, many=True)
         return paginator.get_paginated_response(serializer.data)
-
-    def post(self, request) -> Response:
-        try:
-            word = Word.objects.get(word=request.data.get('word', None))
-            serializer = WordSerializer(word)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Word.DoesNotExist:
-            serializer = WordSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
