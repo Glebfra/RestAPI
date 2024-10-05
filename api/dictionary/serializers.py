@@ -22,18 +22,9 @@ class PronounceSerializer(serializers.ModelSerializer):
 
 
 class WordSerializer(serializers.ModelSerializer):
-    translations = TranslationSerializer(many=True)
-    pronounces = PronounceSerializer(many=True)
+    translations = TranslationSerializer(many=True, read_only=True)
+    pronounces = PronounceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Word
         fields = ('id', 'word', 'language', 'translations', 'pronounces')
-
-
-class WordDetailedSerializer(serializers.ModelSerializer):
-    translations_details = TranslationSerializer(source='translations', many=True, read_only=True)
-    pronounces_details = PronounceSerializer(source='pronounces', many=True, read_only=True)
-
-    class Meta:
-        model = Word
-        fields = ('id', 'word', 'language', 'translations_details', 'pronounces_details', 'translations', 'pronounces')

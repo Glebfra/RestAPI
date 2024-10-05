@@ -4,10 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from dictionary.models import Language, Word, WordPronounce
-from dictionary.serializers import (
-    LanguageSerializer, PronounceSerializer, WordDetailedSerializer, WordSerializer
-)
+from dictionary.serializers import *
 
 
 class LanguageApiView(APIView):
@@ -123,29 +120,3 @@ class WordApiView(APIView):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class WordDetailedApiView(APIView):
-    serializer_class = WordDetailedSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, pk: int) -> Response:
-        word = Word.objects.get(pk=pk)
-        serializer = self.serializer_class(word)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def patch(self, request, pk: int) -> Response:
-        word = Word.objects.get(pk=pk)
-        serializer = self.serializer_class(word, request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def put(self, request, pk: int) -> Response:
-        word = Word.objects.get(pk=pk)
-        serializer = self.serializer_class(word, request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
