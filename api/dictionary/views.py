@@ -8,9 +8,11 @@ from dictionary.serializers import *
 
 
 class LanguageApiView(APIView):
+    serializer_class = LanguageSerializer
+
     def get(self, request) -> Response:
         languages = Language.objects.all()
-        serializer = LanguageSerializer(languages, many=True)
+        serializer = self.serializer_class(languages, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
