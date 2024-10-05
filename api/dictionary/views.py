@@ -45,7 +45,7 @@ class PronounceApiView(APIView):
 class UserWordApiView(APIView):
     serializer_class = WordSerializer
     pagination_class = PageNumberPagination
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request) -> Response:
         words = self.request.user.words.all()
@@ -60,7 +60,7 @@ class UserWordApiView(APIView):
 
 
 class UserAddWordApiView(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request) -> Response:
         user = self.request.user
@@ -81,7 +81,7 @@ class UserAddWordApiView(APIView):
 
 
 class UserDeleteWordApiView(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request) -> Response:
         user = self.request.user
@@ -127,7 +127,7 @@ class WordApiView(APIView):
 
 class WordDetailedApiView(APIView):
     serializer_class = WordDetailedSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, pk: int) -> Response:
         word = Word.objects.get(pk=pk)
