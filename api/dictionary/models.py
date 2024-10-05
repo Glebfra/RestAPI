@@ -1,7 +1,6 @@
-from django.conf import settings
 from django.db import models
 
-User = settings.AUTH_USER_MODEL
+from authentication.models import User
 
 
 class Language(models.Model):
